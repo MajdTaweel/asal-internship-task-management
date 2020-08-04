@@ -1,0 +1,78 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="taskmanagementApp.release.home.title">Releases</span>
+
+        <button [routerLink]="['/release/new']" class="btn btn-primary float-right jh-create-entity create-release"
+                id="jh-create-entity">
+            <fa-icon icon="plus"></fa-icon>
+            <span jhiTranslate="taskmanagementApp.release.home.createLabel">
+            Create a new Release
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div *ngIf="releases?.length === 0" class="alert alert-warning" id="no-result">
+        <span jhiTranslate="taskmanagementApp.release.home.notFound">No releases found</span>
+    </div>
+
+    <div *ngIf="releases && releases.length > 0" class="table-responsive" id="entities">
+        <table aria-describedby="page-heading" class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.release.title">Title</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.release.dateCreated">Date Created</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.release.createdBy">Created By</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.release.type">Type</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.release.status">Status</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.release.deadline">Deadline</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.release.user">User</span></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let release of releases ;trackBy: trackId">
+                <td><a [routerLink]="['/release', release.id, 'view']">{{ release.id }}</a></td>
+                <td>{{ release.title }}</td>
+                <td>{{ release.dateCreated }}</td>
+                <td>{{ release.createdBy }}</td>
+                <td>{{ release.type }}</td>
+                <td jhiTranslate="{{ 'taskmanagementApp.Status.' + release.status }}">{{ release.status }}</td>
+                <td>{{ release.deadline | date:'medium' }}</td>
+                <td>
+                        <span *ngFor="let user of release.users; let last = last">
+                            {{ user.id }}{{ last ? '' : ', ' }}
+                        </span>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button [routerLink]="['/release', release.id, 'view']"
+                                class="btn btn-info btn-sm"
+                                type="submit">
+                            <fa-icon icon="eye"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+
+                        <button [routerLink]="['/release', release.id, 'edit']"
+                                class="btn btn-primary btn-sm"
+                                type="submit">
+                            <fa-icon icon="pencil-alt"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+
+                        <button (click)="delete(release)" class="btn btn-danger btn-sm"
+                                type="submit">
+                            <fa-icon icon="times"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

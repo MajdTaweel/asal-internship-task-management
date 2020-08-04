@@ -1,0 +1,76 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="taskmanagementApp.task.home.title">Tasks</span>
+
+        <button [routerLink]="['/task/new']" class="btn btn-primary float-right jh-create-entity create-task"
+                id="jh-create-entity">
+            <fa-icon icon="plus"></fa-icon>
+            <span jhiTranslate="taskmanagementApp.task.home.createLabel">
+            Create a new Task
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div *ngIf="tasks?.length === 0" class="alert alert-warning" id="no-result">
+        <span jhiTranslate="taskmanagementApp.task.home.notFound">No tasks found</span>
+    </div>
+
+    <div *ngIf="tasks && tasks.length > 0" class="table-responsive" id="entities">
+        <table aria-describedby="page-heading" class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.task.title">Title</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.task.dateCreated">Date Created</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.task.createdBy">Created By</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.task.status">Status</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.task.deadline">Deadline</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.task.release">Release</span></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let task of tasks ;trackBy: trackId">
+                <td><a [routerLink]="['/task', task.id, 'view']">{{ task.id }}</a></td>
+                <td>{{ task.title }}</td>
+                <td>{{ task.dateCreated | date:'medium' }}</td>
+                <td>{{ task.createdBy }}</td>
+                <td jhiTranslate="{{ 'taskmanagementApp.Status.' + task.status }}">{{ task.status }}</td>
+                <td>{{ task.deadline | date:'medium' }}</td>
+                <td>
+                    <div *ngIf="task.releaseId">
+                        <a [routerLink]="['/release', task.releaseId , 'view']">{{ task.releaseId }}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button [routerLink]="['/task', task.id, 'view']"
+                                class="btn btn-info btn-sm"
+                                type="submit">
+                            <fa-icon icon="eye"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+
+                        <button [routerLink]="['/task', task.id, 'edit']"
+                                class="btn btn-primary btn-sm"
+                                type="submit">
+                            <fa-icon icon="pencil-alt"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+
+                        <button (click)="delete(task)" class="btn btn-danger btn-sm"
+                                type="submit">
+                            <fa-icon icon="times"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

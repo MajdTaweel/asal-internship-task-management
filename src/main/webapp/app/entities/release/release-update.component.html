@@ -1,0 +1,126 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form (ngSubmit)="save()" [formGroup]="editForm" name="editForm" novalidate role="form">
+            <h2 id="jhi-release-heading" jhiTranslate="taskmanagementApp.release.home.createOrEditLabel">Create or edit
+                a Release</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div [hidden]="!editForm.get('id')!.value" class="form-group">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input class="form-control" formControlName="id" id="id" name="id" readonly type="text"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_title" jhiTranslate="taskmanagementApp.release.title">Title</label>
+                    <input class="form-control" formControlName="title" id="field_title" name="title"
+                           type="text"/>
+                    <div
+                        *ngIf="editForm.get('title')!.invalid && (editForm.get('title')!.dirty || editForm.get('title')!.touched)">
+                        <small *ngIf="editForm.get('title')?.errors?.required"
+                               class="form-text text-danger" jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                        <small *ngIf="editForm.get('title')?.errors?.minlength"
+                               [translateValues]="{ min: 3 }" class="form-text text-danger"
+                               jhiTranslate="entity.validation.minlength">
+                            This field is required to be at least 3 characters.
+                        </small>
+                        <small *ngIf="editForm.get('title')?.errors?.maxlength"
+                               [translateValues]="{ max: 255 }" class="form-text text-danger"
+                               jhiTranslate="entity.validation.maxlength">
+                            This field cannot be longer than 255 characters.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_dateCreated"
+                           jhiTranslate="taskmanagementApp.release.dateCreated">Date Created</label>
+                    <input class="form-control" formControlName="dateCreated" id="field_dateCreated" name="dateCreated"
+                           type="text"/>
+                    <div
+                        *ngIf="editForm.get('dateCreated')!.invalid && (editForm.get('dateCreated')!.dirty || editForm.get('dateCreated')!.touched)">
+                        <small *ngIf="editForm.get('dateCreated')?.errors?.required"
+                               class="form-text text-danger" jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_createdBy"
+                           jhiTranslate="taskmanagementApp.release.createdBy">Created By</label>
+                    <input class="form-control" formControlName="createdBy" id="field_createdBy" name="createdBy"
+                           type="text"/>
+                    <div
+                        *ngIf="editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)">
+                        <small *ngIf="editForm.get('createdBy')?.errors?.required"
+                               class="form-text text-danger" jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_type" jhiTranslate="taskmanagementApp.release.type">Type</label>
+                    <input class="form-control" formControlName="type" id="field_type" name="type"
+                           type="text"/>
+                    <div
+                        *ngIf="editForm.get('type')!.invalid && (editForm.get('type')!.dirty || editForm.get('type')!.touched)">
+                        <small *ngIf="editForm.get('type')?.errors?.required"
+                               class="form-text text-danger" jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_status"
+                           jhiTranslate="taskmanagementApp.release.status">Status</label>
+                    <select class="form-control" formControlName="status" id="field_status" name="status">
+                        <option value="NEW">{{ 'taskmanagementApp.Status.NEW' | translate }}</option>
+                        <option value="IN_PROGRESS">{{ 'taskmanagementApp.Status.IN_PROGRESS' | translate }}</option>
+                        <option value="DONE">{{ 'taskmanagementApp.Status.DONE' | translate }}</option>
+                    </select>
+                    <div
+                        *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+                        <small *ngIf="editForm.get('status')?.errors?.required"
+                               class="form-text text-danger" jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_deadline"
+                           jhiTranslate="taskmanagementApp.release.deadline">Deadline</label>
+                    <div class="d-flex">
+                        <input class="form-control" formControlName="deadline" id="field_deadline" name="deadline"
+                               placeholder="YYYY-MM-DD HH:mm" type="datetime-local"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field_users" jhiTranslate="taskmanagementApp.release.user">User</label>
+                    <select class="form-control" formControlName="users" id="field_users" multiple name="users">
+                        <option *ngFor="let userOption of users; trackBy: trackById"
+                                [ngValue]="getSelected(editForm.get('users')!.value, userOption)">{{ userOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button (click)="previousState()" class="btn btn-secondary" id="cancel-save" type="button">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button [disabled]="editForm.invalid || isSaving" class="btn btn-primary" id="save-entity"
+                        type="submit">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

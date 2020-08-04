@@ -1,0 +1,62 @@
+{
+  "name": "Task",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required",
+        "minlength",
+        "maxlength"
+      ],
+      "fieldValidateRulesMinlength": "3",
+      "fieldValidateRulesMaxlength": "255"
+    },
+    {
+      "fieldName": "dateCreated",
+      "fieldType": "Instant",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "Status",
+      "fieldValues": "NEW,IN_PROGRESS,DONE",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "deadline",
+      "fieldType": "Instant"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "release",
+      "otherEntityRelationshipName": "task",
+      "relationshipName": "release",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20200804121643",
+  "entityTableName": "task",
+  "dto": "mapstruct",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

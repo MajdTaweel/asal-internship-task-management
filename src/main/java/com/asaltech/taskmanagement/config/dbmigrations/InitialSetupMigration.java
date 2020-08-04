@@ -3,7 +3,6 @@ package com.asaltech.taskmanagement.config.dbmigrations;
 import com.asaltech.taskmanagement.domain.Authority;
 import com.asaltech.taskmanagement.domain.User;
 import com.asaltech.taskmanagement.security.AuthoritiesConstants;
-
 import com.github.mongobee.changeset.ChangeLog;
 import com.github.mongobee.changeset.ChangeSet;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -22,8 +21,11 @@ public class InitialSetupMigration {
         adminAuthority.setName(AuthoritiesConstants.ADMIN);
         Authority userAuthority = new Authority();
         userAuthority.setName(AuthoritiesConstants.USER);
+        Authority leadAuthority = new Authority();
+        leadAuthority.setName(AuthoritiesConstants.LEAD);
         mongoTemplate.save(adminAuthority);
         mongoTemplate.save(userAuthority);
+        mongoTemplate.save(leadAuthority);
     }
 
     @ChangeSet(order = "02", author = "initiator", id = "02-addUsers")

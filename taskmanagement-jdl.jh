@@ -1,0 +1,39 @@
+DEFAULT_MIN_LENGTH = 3
+DEFAULT_MAX_LENGTH = 255
+
+/**
+* A Status Enumeration for Tasks and Releases Statuses
+*/
+enum Status {
+	NEW,
+    IN_PROGRESS,
+    DONE
+}
+
+entity Task {
+	title String required minlength(DEFAULT_MIN_LENGTH) maxlength(DEFAULT_MAX_LENGTH),
+    dateCreated Instant required,
+    createdBy String required,
+    status Status required,
+    deadline Instant
+}
+
+entity Release {
+	title String required minlength(DEFAULT_MIN_LENGTH) maxlength(DEFAULT_MAX_LENGTH),
+    dateCreated String required,
+    createdBy String required,
+    type String required,
+    status Status required,
+    deadline Instant
+}
+
+relationship OneToMany {
+	Release to Task
+}
+
+relationship ManyToMany {
+	Release to User
+}
+
+dto * with mapstruct
+service * with serviceImpl
