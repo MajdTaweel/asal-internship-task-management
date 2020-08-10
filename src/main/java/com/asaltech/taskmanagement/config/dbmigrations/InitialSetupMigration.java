@@ -32,6 +32,8 @@ public class InitialSetupMigration {
     public void addUsers(MongoTemplate mongoTemplate) {
         Authority adminAuthority = new Authority();
         adminAuthority.setName(AuthoritiesConstants.ADMIN);
+        Authority leadAuthority = new Authority();
+        leadAuthority.setName(AuthoritiesConstants.LEAD);
         Authority userAuthority = new Authority();
         userAuthority.setName(AuthoritiesConstants.USER);
 
@@ -47,6 +49,7 @@ public class InitialSetupMigration {
         systemUser.setCreatedBy(systemUser.getLogin());
         systemUser.setCreatedDate(Instant.now());
         systemUser.getAuthorities().add(adminAuthority);
+        systemUser.getAuthorities().add(leadAuthority);
         systemUser.getAuthorities().add(userAuthority);
         mongoTemplate.save(systemUser);
 
@@ -75,6 +78,7 @@ public class InitialSetupMigration {
         adminUser.setCreatedBy(systemUser.getLogin());
         adminUser.setCreatedDate(Instant.now());
         adminUser.getAuthorities().add(adminAuthority);
+        systemUser.getAuthorities().add(leadAuthority);
         adminUser.getAuthorities().add(userAuthority);
         mongoTemplate.save(adminUser);
 
