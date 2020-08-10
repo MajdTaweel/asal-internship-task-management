@@ -42,8 +42,6 @@ describe('Release e2e test', () => {
 
     await promise.all([
       releaseUpdatePage.setTitleInput('title'),
-      releaseUpdatePage.setDateCreatedInput('dateCreated'),
-      releaseUpdatePage.setCreatedByInput('createdBy'),
       releaseUpdatePage.setTypeInput('type'),
       releaseUpdatePage.statusSelectLastOption(),
       releaseUpdatePage.setDeadlineInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
@@ -51,8 +49,6 @@ describe('Release e2e test', () => {
     ]);
 
     expect(await releaseUpdatePage.getTitleInput()).to.eq('title', 'Expected Title value to be equals to title');
-    expect(await releaseUpdatePage.getDateCreatedInput()).to.eq('dateCreated', 'Expected DateCreated value to be equals to dateCreated');
-    expect(await releaseUpdatePage.getCreatedByInput()).to.eq('createdBy', 'Expected CreatedBy value to be equals to createdBy');
     expect(await releaseUpdatePage.getTypeInput()).to.eq('type', 'Expected Type value to be equals to type');
     expect(await releaseUpdatePage.getDeadlineInput()).to.contain('2001-01-01T02:30', 'Expected deadline value to be equals to 2000-12-31');
 

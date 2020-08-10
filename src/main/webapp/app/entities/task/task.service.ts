@@ -50,7 +50,6 @@ export class TaskService {
 
   protected convertDateFromClient(task: ITask): ITask {
     const copy: ITask = Object.assign({}, task, {
-      dateCreated: task.dateCreated && task.dateCreated.isValid() ? task.dateCreated.toJSON() : undefined,
       deadline: task.deadline && task.deadline.isValid() ? task.deadline.toJSON() : undefined,
     });
     return copy;
@@ -58,7 +57,6 @@ export class TaskService {
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.dateCreated = res.body.dateCreated ? moment(res.body.dateCreated) : undefined;
       res.body.deadline = res.body.deadline ? moment(res.body.deadline) : undefined;
     }
     return res;
@@ -67,7 +65,6 @@ export class TaskService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((task: ITask) => {
-        task.dateCreated = task.dateCreated ? moment(task.dateCreated) : undefined;
         task.deadline = task.deadline ? moment(task.deadline) : undefined;
       });
     }

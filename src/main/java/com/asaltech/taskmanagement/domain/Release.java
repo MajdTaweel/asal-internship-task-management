@@ -1,6 +1,6 @@
 package com.asaltech.taskmanagement.domain;
 
-import com.asaltech.taskmanagement.domain.enumeration.Status;
+import com.asaltech.taskmanagement.domain.enumeration.ReleaseStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,20 +30,12 @@ public class Release implements Serializable {
     private String title;
 
     @NotNull
-    @Field("date_created")
-    private String dateCreated;
-
-    @NotNull
-    @Field("created_by")
-    private String createdBy;
-
-    @NotNull
     @Field("type")
     private String type;
 
     @NotNull
     @Field("status")
-    private Status status;
+    private ReleaseStatus status;
 
     @Field("deadline")
     private Instant deadline;
@@ -69,47 +61,17 @@ public class Release implements Serializable {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public Release title(String title) {
         this.title = title;
         return this;
     }
 
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Release dateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-        return this;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Release createdBy(String createdBy) {
-        this.createdBy = createdBy;
-        return this;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public Release type(String type) {
@@ -117,15 +79,19 @@ public class Release implements Serializable {
         return this;
     }
 
-    public Status getStatus() {
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public ReleaseStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ReleaseStatus status) {
         this.status = status;
     }
 
-    public Release status(Status status) {
+    public Release status(ReleaseStatus status) {
         this.status = status;
         return this;
     }
@@ -134,21 +100,17 @@ public class Release implements Serializable {
         return deadline;
     }
 
-    public void setDeadline(Instant deadline) {
-        this.deadline = deadline;
-    }
-
     public Release deadline(Instant deadline) {
         this.deadline = deadline;
         return this;
     }
 
-    public Set<Task> getTasks() {
-        return tasks;
+    public void setDeadline(Instant deadline) {
+        this.deadline = deadline;
     }
 
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
+    public Set<Task> getTasks() {
+        return tasks;
     }
 
     public Release tasks(Set<Task> tasks) {
@@ -168,12 +130,12 @@ public class Release implements Serializable {
         return this;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public Set<User> getUsers() {
+        return users;
     }
 
     public Release users(Set<User> users) {
@@ -189,6 +151,10 @@ public class Release implements Serializable {
     public Release removeUser(User user) {
         this.users.remove(user);
         return this;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -214,8 +180,6 @@ public class Release implements Serializable {
         return "Release{" +
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
-            ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
             ", type='" + getType() + "'" +
             ", status='" + getStatus() + "'" +
             ", deadline='" + getDeadline() + "'" +

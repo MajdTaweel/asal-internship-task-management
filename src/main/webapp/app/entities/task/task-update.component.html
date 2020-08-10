@@ -36,45 +36,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_dateCreated"
-                           jhiTranslate="taskmanagementApp.task.dateCreated">Date Created</label>
-                    <div class="d-flex">
-                        <input class="form-control" formControlName="dateCreated" id="field_dateCreated"
-                               name="dateCreated" placeholder="YYYY-MM-DD HH:mm" type="datetime-local"/>
-                    </div>
-                    <div
-                        *ngIf="editForm.get('dateCreated')!.invalid && (editForm.get('dateCreated')!.dirty || editForm.get('dateCreated')!.touched)">
-                        <small *ngIf="editForm.get('dateCreated')?.errors?.required"
-                               class="form-text text-danger" jhiTranslate="entity.validation.required">
-                            This field is required.
-                        </small>
-                        <small [hidden]="!editForm.get('dateCreated')?.errors?.ZonedDateTimelocal"
-                               class="form-text text-danger" jhiTranslate="entity.validation.ZonedDateTimelocal">
-                            This field should be a date and time.
-                        </small>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_createdBy"
-                           jhiTranslate="taskmanagementApp.task.createdBy">Created By</label>
-                    <input class="form-control" formControlName="createdBy" id="field_createdBy" name="createdBy"
-                           type="text"/>
-                    <div
-                        *ngIf="editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)">
-                        <small *ngIf="editForm.get('createdBy')?.errors?.required"
-                               class="form-text text-danger" jhiTranslate="entity.validation.required">
-                            This field is required.
-                        </small>
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label class="form-control-label" for="field_status" jhiTranslate="taskmanagementApp.task.status">Status</label>
                     <select class="form-control" formControlName="status" id="field_status" name="status">
-                        <option value="NEW">{{ 'taskmanagementApp.Status.NEW' | translate }}</option>
-                        <option value="IN_PROGRESS">{{ 'taskmanagementApp.Status.IN_PROGRESS' | translate }}</option>
-                        <option value="DONE">{{ 'taskmanagementApp.Status.DONE' | translate }}</option>
+                        <option value="NEW">{{ 'taskmanagementApp.TaskStatus.NEW' | translate }}</option>
+                        <option
+                            value="IN_PROGRESS">{{ 'taskmanagementApp.TaskStatus.IN_PROGRESS' | translate }}</option>
+                        <option value="INVALID">{{ 'taskmanagementApp.TaskStatus.INVALID' | translate }}</option>
+                        <option
+                            value="WAITING_FOR_REVIEW">{{ 'taskmanagementApp.TaskStatus.WAITING_FOR_REVIEW' | translate }}</option>
+                        <option value="DONE">{{ 'taskmanagementApp.TaskStatus.DONE' | translate }}</option>
                     </select>
                     <div
                         *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
@@ -86,12 +56,28 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_description"
+                           jhiTranslate="taskmanagementApp.task.description">Description</label>
+                    <input class="form-control" formControlName="description" id="field_description" name="description"
+                           type="text"/>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_deadline"
                            jhiTranslate="taskmanagementApp.task.deadline">Deadline</label>
                     <div class="d-flex">
                         <input class="form-control" formControlName="deadline" id="field_deadline" name="deadline"
                                placeholder="YYYY-MM-DD HH:mm" type="datetime-local"/>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="field_assignees" jhiTranslate="taskmanagementApp.task.assignee">Assignee</label>
+                    <select class="form-control" formControlName="assignees" id="field_assignees" multiple
+                            name="assignees">
+                        <option *ngFor="let userOption of users; trackBy: trackById"
+                                [ngValue]="getSelected(editForm.get('assignees')!.value, userOption)">{{ userOption.id }}</option>
+                    </select>
                 </div>
 
                 <div class="form-group">

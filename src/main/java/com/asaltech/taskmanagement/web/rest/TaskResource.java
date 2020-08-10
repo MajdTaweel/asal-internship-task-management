@@ -24,11 +24,14 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class TaskResource {
 
-    private static final String ENTITY_NAME = "task";
     private final Logger log = LoggerFactory.getLogger(TaskResource.class);
-    private final TaskService taskService;
+
+    private static final String ENTITY_NAME = "task";
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
+
+    private final TaskService taskService;
 
     public TaskResource(TaskService taskService) {
         this.taskService = taskService;
@@ -77,10 +80,11 @@ public class TaskResource {
     /**
      * {@code GET  /tasks} : get all the tasks.
      *
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tasks in body.
      */
     @GetMapping("/tasks")
-    public List<TaskDTO> getAllTasks() {
+    public List<TaskDTO> getAllTasks(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all Tasks");
         return taskService.findAll();
     }

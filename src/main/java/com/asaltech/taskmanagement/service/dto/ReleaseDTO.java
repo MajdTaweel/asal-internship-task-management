@@ -1,6 +1,6 @@
 package com.asaltech.taskmanagement.service.dto;
 
-import com.asaltech.taskmanagement.domain.enumeration.Status;
+import com.asaltech.taskmanagement.domain.enumeration.ReleaseStatus;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -21,16 +21,10 @@ public class ReleaseDTO implements Serializable {
     private String title;
 
     @NotNull
-    private String dateCreated;
-
-    @NotNull
-    private String createdBy;
-
-    @NotNull
     private String type;
 
     @NotNull
-    private Status status;
+    private ReleaseStatus status;
 
     private Instant deadline;
 
@@ -52,22 +46,6 @@ public class ReleaseDTO implements Serializable {
         this.title = title;
     }
 
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public String getType() {
         return type;
     }
@@ -76,11 +54,11 @@ public class ReleaseDTO implements Serializable {
         this.type = type;
     }
 
-    public Status getStatus() {
+    public ReleaseStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ReleaseStatus status) {
         this.status = status;
     }
 
@@ -123,8 +101,6 @@ public class ReleaseDTO implements Serializable {
         return "ReleaseDTO{" +
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
-            ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
             ", type='" + getType() + "'" +
             ", status='" + getStatus() + "'" +
             ", deadline='" + getDeadline() + "'" +

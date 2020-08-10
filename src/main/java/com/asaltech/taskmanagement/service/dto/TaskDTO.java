@@ -1,11 +1,13 @@
 package com.asaltech.taskmanagement.service.dto;
 
-import com.asaltech.taskmanagement.domain.enumeration.Status;
+import com.asaltech.taskmanagement.domain.enumeration.TaskStatus;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A DTO for the {@link com.asaltech.taskmanagement.domain.Task} entity.
@@ -19,16 +21,13 @@ public class TaskDTO implements Serializable {
     private String title;
 
     @NotNull
-    private Instant dateCreated;
+    private TaskStatus status;
 
-    @NotNull
-    private String createdBy;
-
-    @NotNull
-    private Status status;
+    private String description;
 
     private Instant deadline;
 
+    private Set<UserDTO> assignees = new HashSet<>();
 
     private String releaseId;
 
@@ -48,28 +47,20 @@ public class TaskDTO implements Serializable {
         this.title = title;
     }
 
-    public Instant getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Instant dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Status getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Instant getDeadline() {
@@ -78,6 +69,14 @@ public class TaskDTO implements Serializable {
 
     public void setDeadline(Instant deadline) {
         this.deadline = deadline;
+    }
+
+    public Set<UserDTO> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(Set<UserDTO> users) {
+        this.assignees = users;
     }
 
     public String getReleaseId() {
@@ -111,10 +110,10 @@ public class TaskDTO implements Serializable {
         return "TaskDTO{" +
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
-            ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
             ", status='" + getStatus() + "'" +
+            ", description='" + getDescription() + "'" +
             ", deadline='" + getDeadline() + "'" +
+            ", assignees='" + getAssignees() + "'" +
             ", releaseId='" + getReleaseId() + "'" +
             "}";
     }

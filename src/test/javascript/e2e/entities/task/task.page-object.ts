@@ -30,11 +30,11 @@ export class TaskUpdatePage {
   cancelButton = element(by.id('cancel-save'));
 
   titleInput = element(by.id('field_title'));
-  dateCreatedInput = element(by.id('field_dateCreated'));
-  createdByInput = element(by.id('field_createdBy'));
   statusSelect = element(by.id('field_status'));
+  descriptionInput = element(by.id('field_description'));
   deadlineInput = element(by.id('field_deadline'));
 
+  assigneeSelect = element(by.id('field_assignee'));
   releaseSelect = element(by.id('field_release'));
 
   async getPageTitle(): Promise<string> {
@@ -49,22 +49,6 @@ export class TaskUpdatePage {
     return await this.titleInput.getAttribute('value');
   }
 
-  async setDateCreatedInput(dateCreated: string): Promise<void> {
-    await this.dateCreatedInput.sendKeys(dateCreated);
-  }
-
-  async getDateCreatedInput(): Promise<string> {
-    return await this.dateCreatedInput.getAttribute('value');
-  }
-
-  async setCreatedByInput(createdBy: string): Promise<void> {
-    await this.createdByInput.sendKeys(createdBy);
-  }
-
-  async getCreatedByInput(): Promise<string> {
-    return await this.createdByInput.getAttribute('value');
-  }
-
   async setStatusSelect(status: string): Promise<void> {
     await this.statusSelect.sendKeys(status);
   }
@@ -77,12 +61,36 @@ export class TaskUpdatePage {
     await this.statusSelect.all(by.tagName('option')).last().click();
   }
 
+  async setDescriptionInput(description: string): Promise<void> {
+    await this.descriptionInput.sendKeys(description);
+  }
+
+  async getDescriptionInput(): Promise<string> {
+    return await this.descriptionInput.getAttribute('value');
+  }
+
   async setDeadlineInput(deadline: string): Promise<void> {
     await this.deadlineInput.sendKeys(deadline);
   }
 
   async getDeadlineInput(): Promise<string> {
     return await this.deadlineInput.getAttribute('value');
+  }
+
+  async assigneeSelectLastOption(): Promise<void> {
+    await this.assigneeSelect.all(by.tagName('option')).last().click();
+  }
+
+  async assigneeSelectOption(option: string): Promise<void> {
+    await this.assigneeSelect.sendKeys(option);
+  }
+
+  getAssigneeSelect(): ElementFinder {
+    return this.assigneeSelect;
+  }
+
+  async getAssigneeSelectedOption(): Promise<string> {
+    return await this.assigneeSelect.element(by.css('option:checked')).getText();
   }
 
   async releaseSelectLastOption(): Promise<void> {

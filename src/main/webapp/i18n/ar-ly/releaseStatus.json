@@ -1,6 +1,6 @@
 {
   "taskmanagementApp": {
-    "Status": {
+    "ReleaseStatus": {
       "null": "",
       "NEW": "NEW",
       "IN_PROGRESS": "IN_PROGRESS",

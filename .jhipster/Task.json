@@ -13,26 +13,16 @@
       "fieldValidateRulesMaxlength": "255"
     },
     {
-      "fieldName": "dateCreated",
-      "fieldType": "Instant",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
-      "fieldName": "createdBy",
-      "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
       "fieldName": "status",
-      "fieldType": "Status",
-      "fieldValues": "NEW,IN_PROGRESS,DONE",
+      "fieldType": "TaskStatus",
+      "fieldValues": "NEW,IN_PROGRESS,INVALID,WAITING_FOR_REVIEW,DONE",
       "fieldValidateRules": [
         "required"
       ]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
     },
     {
       "fieldName": "deadline",
@@ -40,6 +30,14 @@
     }
   ],
   "relationships": [
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "task",
+      "relationshipName": "assignee",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "release",

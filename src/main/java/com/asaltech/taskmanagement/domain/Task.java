@@ -1,6 +1,6 @@
 package com.asaltech.taskmanagement.domain;
 
-import com.asaltech.taskmanagement.domain.enumeration.Status;
+import com.asaltech.taskmanagement.domain.enumeration.TaskStatus;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Task.
@@ -29,19 +31,18 @@ public class Task implements Serializable {
     private String title;
 
     @NotNull
-    @Field("date_created")
-    private Instant dateCreated;
-
-    @NotNull
-    @Field("created_by")
-    private String createdBy;
-
-    @NotNull
     @Field("status")
-    private Status status;
+    private TaskStatus status;
+
+    @Field("description")
+    private String description;
 
     @Field("deadline")
     private Instant deadline;
+
+    @DBRef
+    @Field("assignees")
+    private Set<User> assignees = new HashSet<>();
 
     @DBRef
     @Field("release")
@@ -61,51 +62,38 @@ public class Task implements Serializable {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public Task title(String title) {
         this.title = title;
         return this;
     }
 
-    public Instant getDateCreated() {
-        return dateCreated;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setDateCreated(Instant dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Task dateCreated(Instant dateCreated) {
-        this.dateCreated = dateCreated;
-        return this;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Task createdBy(String createdBy) {
-        this.createdBy = createdBy;
-        return this;
-    }
-
-    public Status getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
-    public Task status(Status status) {
+    public Task status(TaskStatus status) {
         this.status = status;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Task description(String description) {
+        this.description = description;
         return this;
     }
 
@@ -113,12 +101,35 @@ public class Task implements Serializable {
         return deadline;
     }
 
+    public Task deadline(Instant deadline) {
+        this.deadline = deadline;
+        return this;
+    }
+
     public void setDeadline(Instant deadline) {
         this.deadline = deadline;
     }
 
-    public Task deadline(Instant deadline) {
-        this.deadline = deadline;
+    public Set<User> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(Set<User> users) {
+        this.assignees = users;
+    }
+
+    public Task assignees(Set<User> users) {
+        this.assignees = users;
+        return this;
+    }
+
+    public Task addAssignee(User user) {
+        this.assignees.add(user);
+        return this;
+    }
+
+    public Task removeAssignee(User user) {
+        this.assignees.remove(user);
         return this;
     }
 
@@ -126,13 +137,13 @@ public class Task implements Serializable {
         return release;
     }
 
-    public void setRelease(Release release) {
-        this.release = release;
-    }
-
     public Task release(Release release) {
         this.release = release;
         return this;
+    }
+
+    public void setRelease(Release release) {
+        this.release = release;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -158,9 +169,8 @@ public class Task implements Serializable {
         return "Task{" +
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
-            ", dateCreated='" + getDateCreated() + "'" +
-            ", createdBy='" + getCreatedBy() + "'" +
             ", status='" + getStatus() + "'" +
+            ", description='" + getDescription() + "'" +
             ", deadline='" + getDeadline() + "'" +
             "}";
     }

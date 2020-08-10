@@ -30,8 +30,6 @@ export class ReleaseUpdatePage {
   cancelButton = element(by.id('cancel-save'));
 
   titleInput = element(by.id('field_title'));
-  dateCreatedInput = element(by.id('field_dateCreated'));
-  createdByInput = element(by.id('field_createdBy'));
   typeInput = element(by.id('field_type'));
   statusSelect = element(by.id('field_status'));
   deadlineInput = element(by.id('field_deadline'));
@@ -48,22 +46,6 @@ export class ReleaseUpdatePage {
 
   async getTitleInput(): Promise<string> {
     return await this.titleInput.getAttribute('value');
-  }
-
-  async setDateCreatedInput(dateCreated: string): Promise<void> {
-    await this.dateCreatedInput.sendKeys(dateCreated);
-  }
-
-  async getDateCreatedInput(): Promise<string> {
-    return await this.dateCreatedInput.getAttribute('value');
-  }
-
-  async setCreatedByInput(createdBy: string): Promise<void> {
-    await this.createdByInput.sendKeys(createdBy);
-  }
-
-  async getCreatedByInput(): Promise<string> {
-    return await this.createdByInput.getAttribute('value');
   }
 
   async setTypeInput(type: string): Promise<void> {

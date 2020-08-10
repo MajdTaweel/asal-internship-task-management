@@ -25,10 +25,10 @@
             <tr>
                 <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.task.title">Title</span></th>
-                <th scope="col"><span jhiTranslate="taskmanagementApp.task.dateCreated">Date Created</span></th>
-                <th scope="col"><span jhiTranslate="taskmanagementApp.task.createdBy">Created By</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.task.status">Status</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.task.description">Description</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.task.deadline">Deadline</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.task.assignee">Assignee</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.task.release">Release</span></th>
                 <th scope="col"></th>
             </tr>
@@ -37,10 +37,14 @@
             <tr *ngFor="let task of tasks ;trackBy: trackId">
                 <td><a [routerLink]="['/task', task.id, 'view']">{{ task.id }}</a></td>
                 <td>{{ task.title }}</td>
-                <td>{{ task.dateCreated | date:'medium' }}</td>
-                <td>{{ task.createdBy }}</td>
-                <td jhiTranslate="{{ 'taskmanagementApp.Status.' + task.status }}">{{ task.status }}</td>
+                <td jhiTranslate="{{ 'taskmanagementApp.TaskStatus.' + task.status }}">{{ task.status }}</td>
+                <td>{{ task.description }}</td>
                 <td>{{ task.deadline | date:'medium' }}</td>
+                <td>
+                        <span *ngFor="let assignee of task.assignees; let last = last">
+                            {{ assignee.id }}{{ last ? '' : ', ' }}
+                        </span>
+                </td>
                 <td>
                     <div *ngIf="task.releaseId">
                         <a [routerLink]="['/release', task.releaseId , 'view']">{{ task.releaseId }}</a>

@@ -42,19 +42,15 @@ describe('Task e2e test', () => {
 
     await promise.all([
       taskUpdatePage.setTitleInput('title'),
-      taskUpdatePage.setDateCreatedInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
-      taskUpdatePage.setCreatedByInput('createdBy'),
       taskUpdatePage.statusSelectLastOption(),
+      taskUpdatePage.setDescriptionInput('description'),
       taskUpdatePage.setDeadlineInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
+      // taskUpdatePage.assigneeSelectLastOption(),
       taskUpdatePage.releaseSelectLastOption(),
     ]);
 
     expect(await taskUpdatePage.getTitleInput()).to.eq('title', 'Expected Title value to be equals to title');
-    expect(await taskUpdatePage.getDateCreatedInput()).to.contain(
-      '2001-01-01T02:30',
-      'Expected dateCreated value to be equals to 2000-12-31'
-    );
-    expect(await taskUpdatePage.getCreatedByInput()).to.eq('createdBy', 'Expected CreatedBy value to be equals to createdBy');
+    expect(await taskUpdatePage.getDescriptionInput()).to.eq('description', 'Expected Description value to be equals to description');
     expect(await taskUpdatePage.getDeadlineInput()).to.contain('2001-01-01T02:30', 'Expected deadline value to be equals to 2000-12-31');
 
     await taskUpdatePage.save();

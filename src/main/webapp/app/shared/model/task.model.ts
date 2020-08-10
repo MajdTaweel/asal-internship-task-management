@@ -1,13 +1,14 @@
 import { Moment } from 'moment';
-import { Status } from 'app/shared/model/enumerations/status.model';
+import { IUser } from 'app/core/user/user.model';
+import { TaskStatus } from 'app/shared/model/enumerations/task-status.model';
 
 export interface ITask {
   id?: string;
   title?: string;
-  dateCreated?: Moment;
-  createdBy?: string;
-  status?: Status;
+  status?: TaskStatus;
+  description?: string;
   deadline?: Moment;
+  assignees?: IUser[];
   releaseId?: string;
 }
 
@@ -15,10 +16,10 @@ export class Task implements ITask {
   constructor(
     public id?: string,
     public title?: string,
-    public dateCreated?: Moment,
-    public createdBy?: string,
-    public status?: Status,
+    public status?: TaskStatus,
+    public description?: string,
     public deadline?: Moment,
+    public assignees?: IUser[],
     public releaseId?: string
   ) {}
 }

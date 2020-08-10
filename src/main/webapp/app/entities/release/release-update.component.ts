@@ -23,8 +23,6 @@ export class ReleaseUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     title: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
-    dateCreated: [null, [Validators.required]],
-    createdBy: [null, [Validators.required]],
     type: [null, [Validators.required]],
     status: [null, [Validators.required]],
     deadline: [],
@@ -55,8 +53,6 @@ export class ReleaseUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: release.id,
       title: release.title,
-      dateCreated: release.dateCreated,
-      createdBy: release.createdBy,
       type: release.type,
       status: release.status,
       deadline: release.deadline ? release.deadline.format(DATE_TIME_FORMAT) : null,
@@ -76,6 +72,18 @@ export class ReleaseUpdateComponent implements OnInit {
     } else {
       this.subscribeToSaveResponse(this.releaseService.create(release));
     }
+  }
+
+  private createFromForm(): IRelease {
+    return {
+      ...new Release(),
+      id: this.editForm.get(['id'])!.value,
+      title: this.editForm.get(['title'])!.value,
+      type: this.editForm.get(['type'])!.value,
+      status: this.editForm.get(['status'])!.value,
+      deadline: this.editForm.get(['deadline'])!.value ? moment(this.editForm.get(['deadline'])!.value, DATE_TIME_FORMAT) : undefined,
+      users: this.editForm.get(['users'])!.value,
+    };
   }
 
   trackById(index: number, item: IUser): any {
@@ -107,19 +115,5 @@ export class ReleaseUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
-  }
-
-  private createFromForm(): IRelease {
-    return {
-      ...new Release(),
-      id: this.editForm.get(['id'])!.value,
-      title: this.editForm.get(['title'])!.value,
-      dateCreated: this.editForm.get(['dateCreated'])!.value,
-      createdBy: this.editForm.get(['createdBy'])!.value,
-      type: this.editForm.get(['type'])!.value,
-      status: this.editForm.get(['status'])!.value,
-      deadline: this.editForm.get(['deadline'])!.value ? moment(this.editForm.get(['deadline'])!.value, DATE_TIME_FORMAT) : undefined,
-      users: this.editForm.get(['users'])!.value,
-    };
   }
 }

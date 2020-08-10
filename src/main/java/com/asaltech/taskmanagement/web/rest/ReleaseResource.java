@@ -24,11 +24,14 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class ReleaseResource {
 
-    private static final String ENTITY_NAME = "release";
     private final Logger log = LoggerFactory.getLogger(ReleaseResource.class);
-    private final ReleaseService releaseService;
+
+    private static final String ENTITY_NAME = "release";
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
+
+    private final ReleaseService releaseService;
 
     public ReleaseResource(ReleaseService releaseService) {
         this.releaseService = releaseService;

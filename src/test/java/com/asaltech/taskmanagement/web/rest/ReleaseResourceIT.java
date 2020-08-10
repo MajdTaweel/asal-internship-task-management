@@ -2,7 +2,7 @@ package com.asaltech.taskmanagement.web.rest;
 
 import com.asaltech.taskmanagement.TaskmanagementApp;
 import com.asaltech.taskmanagement.domain.Release;
-import com.asaltech.taskmanagement.domain.enumeration.Status;
+import com.asaltech.taskmanagement.domain.enumeration.ReleaseStatus;
 import com.asaltech.taskmanagement.repository.ReleaseRepository;
 import com.asaltech.taskmanagement.service.ReleaseService;
 import com.asaltech.taskmanagement.service.dto.ReleaseDTO;
@@ -30,7 +30,6 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 /**
  * Integration tests for the {@link ReleaseResource} REST controller.
  */
@@ -43,17 +42,11 @@ public class ReleaseResourceIT {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_DATE_CREATED = "AAAAAAAAAA";
-    private static final String UPDATED_DATE_CREATED = "BBBBBBBBBB";
-
-    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
-    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
-
     private static final String DEFAULT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
-    private static final Status DEFAULT_STATUS = Status.NEW;
-    private static final Status UPDATED_STATUS = Status.IN_PROGRESS;
+    private static final ReleaseStatus DEFAULT_STATUS = ReleaseStatus.NEW;
+    private static final ReleaseStatus UPDATED_STATUS = ReleaseStatus.IN_PROGRESS;
 
     private static final Instant DEFAULT_DEADLINE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DEADLINE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
@@ -80,32 +73,27 @@ public class ReleaseResourceIT {
 
     /**
      * Create an entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
     public static Release createEntity() {
         Release release = new Release()
             .title(DEFAULT_TITLE)
-            .dateCreated(DEFAULT_DATE_CREATED)
-            .createdBy(DEFAULT_CREATED_BY)
             .type(DEFAULT_TYPE)
             .status(DEFAULT_STATUS)
             .deadline(DEFAULT_DEADLINE);
         return release;
     }
-
     /**
      * Create an updated entity for this test.
-     * <p>
+     *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
     public static Release createUpdatedEntity() {
         Release release = new Release()
             .title(UPDATED_TITLE)
-            .dateCreated(UPDATED_DATE_CREATED)
-            .createdBy(UPDATED_CREATED_BY)
             .type(UPDATED_TYPE)
             .status(UPDATED_STATUS)
             .deadline(UPDATED_DEADLINE);
@@ -133,8 +121,6 @@ public class ReleaseResourceIT {
         assertThat(releaseList).hasSize(databaseSizeBeforeCreate + 1);
         Release testRelease = releaseList.get(releaseList.size() - 1);
         assertThat(testRelease.getTitle()).isEqualTo(DEFAULT_TITLE);
-        assertThat(testRelease.getDateCreated()).isEqualTo(DEFAULT_DATE_CREATED);
-        assertThat(testRelease.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
         assertThat(testRelease.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testRelease.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testRelease.getDeadline()).isEqualTo(DEFAULT_DEADLINE);
@@ -165,44 +151,6 @@ public class ReleaseResourceIT {
         int databaseSizeBeforeTest = releaseRepository.findAll().size();
         // set the field null
         release.setTitle(null);
-
-        // Create the Release, which fails.
-        ReleaseDTO releaseDTO = releaseMapper.toDto(release);
-
-
-        restReleaseMockMvc.perform(post("/api/releases")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(releaseDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Release> releaseList = releaseRepository.findAll();
-        assertThat(releaseList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    public void checkDateCreatedIsRequired() throws Exception {
-        int databaseSizeBeforeTest = releaseRepository.findAll().size();
-        // set the field null
-        release.setDateCreated(null);
-
-        // Create the Release, which fails.
-        ReleaseDTO releaseDTO = releaseMapper.toDto(release);
-
-
-        restReleaseMockMvc.perform(post("/api/releases")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(releaseDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Release> releaseList = releaseRepository.findAll();
-        assertThat(releaseList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    public void checkCreatedByIsRequired() throws Exception {
-        int databaseSizeBeforeTest = releaseRepository.findAll().size();
-        // set the field null
-        release.setCreatedBy(null);
 
         // Create the Release, which fails.
         ReleaseDTO releaseDTO = releaseMapper.toDto(release);
@@ -266,8 +214,6 @@ public class ReleaseResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(release.getId())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
-            .andExpect(jsonPath("$.[*].dateCreated").value(hasItem(DEFAULT_DATE_CREATED)))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].deadline").value(hasItem(DEFAULT_DEADLINE.toString())));
@@ -304,13 +250,10 @@ public class ReleaseResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(release.getId()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
-            .andExpect(jsonPath("$.dateCreated").value(DEFAULT_DATE_CREATED))
-            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.deadline").value(DEFAULT_DEADLINE.toString()));
     }
-
     @Test
     public void getNonExistingRelease() throws Exception {
         // Get the release
@@ -329,8 +272,6 @@ public class ReleaseResourceIT {
         Release updatedRelease = releaseRepository.findById(release.getId()).get();
         updatedRelease
             .title(UPDATED_TITLE)
-            .dateCreated(UPDATED_DATE_CREATED)
-            .createdBy(UPDATED_CREATED_BY)
             .type(UPDATED_TYPE)
             .status(UPDATED_STATUS)
             .deadline(UPDATED_DEADLINE);
@@ -346,8 +287,6 @@ public class ReleaseResourceIT {
         assertThat(releaseList).hasSize(databaseSizeBeforeUpdate);
         Release testRelease = releaseList.get(releaseList.size() - 1);
         assertThat(testRelease.getTitle()).isEqualTo(UPDATED_TITLE);
-        assertThat(testRelease.getDateCreated()).isEqualTo(UPDATED_DATE_CREATED);
-        assertThat(testRelease.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
         assertThat(testRelease.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testRelease.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testRelease.getDeadline()).isEqualTo(UPDATED_DEADLINE);

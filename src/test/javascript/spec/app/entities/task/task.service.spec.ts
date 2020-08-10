@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { TaskService } from 'app/entities/task/task.service';
 import { ITask, Task } from 'app/shared/model/task.model';
-import { Status } from 'app/shared/model/enumerations/status.model';
+import { TaskStatus } from 'app/shared/model/enumerations/task-status.model';
 
 describe('Service Tests', () => {
   describe('Task Service', () => {
@@ -25,14 +25,13 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Task('ID', 'AAAAAAA', currentDate, 'AAAAAAA', Status.NEW, currentDate);
+      elemDefault = new Task('ID', 'AAAAAAA', TaskStatus.NEW, 'AAAAAAA', currentDate);
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
         const returnedFromService = Object.assign(
           {
-            dateCreated: currentDate.format(DATE_TIME_FORMAT),
             deadline: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
@@ -49,7 +48,6 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 'ID',
-            dateCreated: currentDate.format(DATE_TIME_FORMAT),
             deadline: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
@@ -57,7 +55,6 @@ describe('Service Tests', () => {
 
         const expected = Object.assign(
           {
-            dateCreated: currentDate,
             deadline: currentDate,
           },
           returnedFromService
@@ -74,9 +71,8 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             title: 'BBBBBB',
-            dateCreated: currentDate.format(DATE_TIME_FORMAT),
-            createdBy: 'BBBBBB',
             status: 'BBBBBB',
+            description: 'BBBBBB',
             deadline: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
@@ -84,7 +80,6 @@ describe('Service Tests', () => {
 
         const expected = Object.assign(
           {
-            dateCreated: currentDate,
             deadline: currentDate,
           },
           returnedFromService
@@ -101,9 +96,8 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             title: 'BBBBBB',
-            dateCreated: currentDate.format(DATE_TIME_FORMAT),
-            createdBy: 'BBBBBB',
             status: 'BBBBBB',
+            description: 'BBBBBB',
             deadline: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
@@ -111,7 +105,6 @@ describe('Service Tests', () => {
 
         const expected = Object.assign(
           {
-            dateCreated: currentDate,
             deadline: currentDate,
           },
           returnedFromService

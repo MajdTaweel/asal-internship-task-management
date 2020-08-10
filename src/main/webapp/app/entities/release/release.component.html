@@ -25,8 +25,6 @@
             <tr>
                 <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.release.title">Title</span></th>
-                <th scope="col"><span jhiTranslate="taskmanagementApp.release.dateCreated">Date Created</span></th>
-                <th scope="col"><span jhiTranslate="taskmanagementApp.release.createdBy">Created By</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.release.type">Type</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.release.status">Status</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.release.deadline">Deadline</span></th>
@@ -38,10 +36,8 @@
             <tr *ngFor="let release of releases ;trackBy: trackId">
                 <td><a [routerLink]="['/release', release.id, 'view']">{{ release.id }}</a></td>
                 <td>{{ release.title }}</td>
-                <td>{{ release.dateCreated }}</td>
-                <td>{{ release.createdBy }}</td>
                 <td>{{ release.type }}</td>
-                <td jhiTranslate="{{ 'taskmanagementApp.Status.' + release.status }}">{{ release.status }}</td>
+                <td jhiTranslate="{{ 'taskmanagementApp.ReleaseStatus.' + release.status }}">{{ release.status }}</td>
                 <td>{{ release.deadline | date:'medium' }}</td>
                 <td>
                         <span *ngFor="let user of release.users; let last = last">

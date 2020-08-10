@@ -7,6 +7,8 @@ import com.asaltech.taskmanagement.service.dto.TaskDTO;
 import com.asaltech.taskmanagement.service.mapper.TaskMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -42,16 +44,20 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskDTO> findAll() {
         log.debug("Request to get all Tasks");
-        return taskRepository.findAll().stream()
+        return taskRepository.findAllWithEagerRelationships().stream()
             .map(taskMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }
 
 
+    public Page<TaskDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return taskRepository.findAllWithEagerRelationships(pageable).map(taskMapper::toDto);
+    }
+
     @Override
     public Optional<TaskDTO> findOne(String id) {
         log.debug("Request to get Task : {}", id);
-        return taskRepository.findById(id)
+        return taskRepository.findOneWithEagerRelationships(id)
             .map(taskMapper::toDto);
     }
 

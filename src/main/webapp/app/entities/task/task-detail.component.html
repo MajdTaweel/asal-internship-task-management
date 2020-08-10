@@ -12,21 +12,23 @@
                 <dd>
                     <span>{{ task.title }}</span>
                 </dd>
-                <dt><span jhiTranslate="taskmanagementApp.task.dateCreated">Date Created</span></dt>
-                <dd>
-                    <span>{{ task.dateCreated }}</span>
-                </dd>
-                <dt><span jhiTranslate="taskmanagementApp.task.createdBy">Created By</span></dt>
-                <dd>
-                    <span>{{ task.createdBy }}</span>
-                </dd>
                 <dt><span jhiTranslate="taskmanagementApp.task.status">Status</span></dt>
                 <dd>
-                    <span jhiTranslate="{{ 'taskmanagementApp.Status.' + task.status }}">{{ task.status }}</span>
+                    <span jhiTranslate="{{ 'taskmanagementApp.TaskStatus.' + task.status }}">{{ task.status }}</span>
+                </dd>
+                <dt><span jhiTranslate="taskmanagementApp.task.description">Description</span></dt>
+                <dd>
+                    <span>{{ task.description }}</span>
                 </dd>
                 <dt><span jhiTranslate="taskmanagementApp.task.deadline">Deadline</span></dt>
                 <dd>
                     <span>{{ task.deadline }}</span>
+                </dd>
+                <dt><span jhiTranslate="taskmanagementApp.task.assignee">Assignee</span></dt>
+                <dd>
+                    <span *ngFor="let assignee of task.assignees; let last = last">
+                        {{ assignee.id }}{{ last ? '' : ', ' }}
+                    </span>
                 </dd>
                 <dt><span jhiTranslate="taskmanagementApp.task.release">Release</span></dt>
                 <dd>

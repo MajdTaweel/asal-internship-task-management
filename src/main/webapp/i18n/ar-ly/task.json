@@ -17,10 +17,10 @@
         "title": "Task"
       },
       "title": "Title",
-      "dateCreated": "Date Created",
-      "createdBy": "Created By",
       "status": "Status",
+      "description": "Description",
       "deadline": "Deadline",
+      "assignee": "Assignee",
       "release": "Release"
     }
   }

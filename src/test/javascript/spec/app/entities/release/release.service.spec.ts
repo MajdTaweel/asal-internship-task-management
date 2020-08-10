@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { ReleaseService } from 'app/entities/release/release.service';
 import { IRelease, Release } from 'app/shared/model/release.model';
-import { Status } from 'app/shared/model/enumerations/status.model';
+import { ReleaseStatus } from 'app/shared/model/enumerations/release-status.model';
 
 describe('Service Tests', () => {
   describe('Release Service', () => {
@@ -25,7 +25,7 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Release('ID', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', Status.NEW, currentDate);
+      elemDefault = new Release('ID', 'AAAAAAA', 'AAAAAAA', ReleaseStatus.NEW, currentDate);
     });
 
     describe('Service methods', () => {
@@ -71,8 +71,6 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             title: 'BBBBBB',
-            dateCreated: 'BBBBBB',
-            createdBy: 'BBBBBB',
             type: 'BBBBBB',
             status: 'BBBBBB',
             deadline: currentDate.format(DATE_TIME_FORMAT),
@@ -98,8 +96,6 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             title: 'BBBBBB',
-            dateCreated: 'BBBBBB',
-            createdBy: 'BBBBBB',
             type: 'BBBBBB',
             status: 'BBBBBB',
             deadline: currentDate.format(DATE_TIME_FORMAT),

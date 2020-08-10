@@ -13,20 +13,6 @@
       "fieldValidateRulesMaxlength": "255"
     },
     {
-      "fieldName": "dateCreated",
-      "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
-      "fieldName": "createdBy",
-      "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
-    },
-    {
       "fieldName": "type",
       "fieldType": "String",
       "fieldValidateRules": [
@@ -35,7 +21,7 @@
     },
     {
       "fieldName": "status",
-      "fieldType": "Status",
+      "fieldType": "ReleaseStatus",
       "fieldValues": "NEW,IN_PROGRESS,DONE",
       "fieldValidateRules": [
         "required"

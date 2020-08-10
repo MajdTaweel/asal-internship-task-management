@@ -1,6 +1,8 @@
 package com.asaltech.taskmanagement.service;
 
 import com.asaltech.taskmanagement.service.dto.TaskDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,13 @@ public interface TaskService {
      * @return the list of entities.
      */
     List<TaskDTO> findAll();
+
+    /**
+     * Get all the tasks with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    Page<TaskDTO> findAllWithEagerRelationships(Pageable pageable);
 
 
     /**

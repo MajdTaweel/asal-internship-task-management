@@ -12,21 +12,14 @@
                 <dd>
                     <span>{{ release.title }}</span>
                 </dd>
-                <dt><span jhiTranslate="taskmanagementApp.release.dateCreated">Date Created</span></dt>
-                <dd>
-                    <span>{{ release.dateCreated }}</span>
-                </dd>
-                <dt><span jhiTranslate="taskmanagementApp.release.createdBy">Created By</span></dt>
-                <dd>
-                    <span>{{ release.createdBy }}</span>
-                </dd>
                 <dt><span jhiTranslate="taskmanagementApp.release.type">Type</span></dt>
                 <dd>
                     <span>{{ release.type }}</span>
                 </dd>
                 <dt><span jhiTranslate="taskmanagementApp.release.status">Status</span></dt>
                 <dd>
-                    <span jhiTranslate="{{ 'taskmanagementApp.Status.' + release.status }}">{{ release.status }}</span>
+                    <span
+                        jhiTranslate="{{ 'taskmanagementApp.ReleaseStatus.' + release.status }}">{{ release.status }}</span>
                 </dd>
                 <dt><span jhiTranslate="taskmanagementApp.release.deadline">Deadline</span></dt>
                 <dd>
