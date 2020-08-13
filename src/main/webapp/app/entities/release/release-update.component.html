@@ -76,10 +76,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="field_users" jhiTranslate="taskmanagementApp.release.user">User</label>
-                    <select class="form-control" formControlName="users" id="field_users" multiple name="users">
+                    <label for="field_teams" jhiTranslate="taskmanagementApp.release.team">Team</label>
+                    <select class="form-control" formControlName="teams" id="field_teams" multiple name="teams">
                         <option *ngFor="let userOption of users; trackBy: trackById"
-                                [ngValue]="getSelected(editForm.get('users')!.value, userOption)">{{ userOption.id }}</option>
+                                [ngValue]="getSelected(editForm.get('teams')!.value, userOption)">{{ userOption.id }}</option>
                     </select>
                 </div>
             </div>

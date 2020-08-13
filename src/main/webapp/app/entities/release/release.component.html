@@ -28,7 +28,7 @@
                 <th scope="col"><span jhiTranslate="taskmanagementApp.release.type">Type</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.release.status">Status</span></th>
                 <th scope="col"><span jhiTranslate="taskmanagementApp.release.deadline">Deadline</span></th>
-                <th scope="col"><span jhiTranslate="taskmanagementApp.release.user">User</span></th>
+                <th scope="col"><span jhiTranslate="taskmanagementApp.release.team">Team</span></th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -40,8 +40,8 @@
                 <td jhiTranslate="{{ 'taskmanagementApp.ReleaseStatus.' + release.status }}">{{ release.status }}</td>
                 <td>{{ release.deadline | date:'medium' }}</td>
                 <td>
-                        <span *ngFor="let user of release.users; let last = last">
-                            {{ user.id }}{{ last ? '' : ', ' }}
+                        <span *ngFor="let team of release.teams; let last = last">
+                            {{ team.id }}{{ last ? '' : ', ' }}
                         </span>
                 </td>
                 <td class="text-right">

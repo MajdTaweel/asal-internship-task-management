@@ -43,7 +43,7 @@
       "relationshipType": "many-to-many",
       "otherEntityName": "user",
       "otherEntityRelationshipName": "release",
-      "relationshipName": "user",
+      "relationshipName": "team",
       "otherEntityField": "id",
       "ownerSide": true
     }

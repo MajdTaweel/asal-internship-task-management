@@ -45,8 +45,8 @@ public class Release implements Serializable {
     private Set<Task> tasks = new HashSet<>();
 
     @DBRef
-    @Field("users")
-    private Set<User> users = new HashSet<>();
+    @Field("teams")
+    private Set<User> teams = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public String getId() {
@@ -87,13 +87,13 @@ public class Release implements Serializable {
         return status;
     }
 
-    public void setStatus(ReleaseStatus status) {
-        this.status = status;
-    }
-
     public Release status(ReleaseStatus status) {
         this.status = status;
         return this;
+    }
+
+    public void setStatus(ReleaseStatus status) {
+        this.status = status;
     }
 
     public Instant getDeadline() {
@@ -134,27 +134,27 @@ public class Release implements Serializable {
         this.tasks = tasks;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Set<User> getTeams() {
+        return teams;
     }
 
-    public Release users(Set<User> users) {
-        this.users = users;
+    public void setTeams(Set<User> users) {
+        this.teams = users;
+    }
+
+    public Release teams(Set<User> users) {
+        this.teams = users;
         return this;
     }
 
-    public Release addUser(User user) {
-        this.users.add(user);
+    public Release addTeam(User user) {
+        this.teams.add(user);
         return this;
     }
 
-    public Release removeUser(User user) {
-        this.users.remove(user);
+    public Release removeTeam(User user) {
+        this.teams.remove(user);
         return this;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

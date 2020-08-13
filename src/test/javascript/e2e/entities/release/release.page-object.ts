@@ -34,7 +34,7 @@ export class ReleaseUpdatePage {
   statusSelect = element(by.id('field_status'));
   deadlineInput = element(by.id('field_deadline'));
 
-  userSelect = element(by.id('field_user'));
+  teamSelect = element(by.id('field_team'));
 
   async getPageTitle(): Promise<string> {
     return this.pageTitle.getAttribute('jhiTranslate');
@@ -76,20 +76,20 @@ export class ReleaseUpdatePage {
     return await this.deadlineInput.getAttribute('value');
   }
 
-  async userSelectLastOption(): Promise<void> {
-    await this.userSelect.all(by.tagName('option')).last().click();
+  async teamSelectLastOption(): Promise<void> {
+    await this.teamSelect.all(by.tagName('option')).last().click();
   }
 
-  async userSelectOption(option: string): Promise<void> {
-    await this.userSelect.sendKeys(option);
+  async teamSelectOption(option: string): Promise<void> {
+    await this.teamSelect.sendKeys(option);
   }
 
-  getUserSelect(): ElementFinder {
-    return this.userSelect;
+  getTeamSelect(): ElementFinder {
+    return this.teamSelect;
   }
 
-  async getUserSelectedOption(): Promise<string> {
-    return await this.userSelect.element(by.css('option:checked')).getText();
+  async getTeamSelectedOption(): Promise<string> {
+    return await this.teamSelect.element(by.css('option:checked')).getText();
   }
 
   async save(): Promise<void> {

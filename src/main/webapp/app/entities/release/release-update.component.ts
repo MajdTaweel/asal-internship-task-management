@@ -26,7 +26,7 @@ export class ReleaseUpdateComponent implements OnInit {
     type: [null, [Validators.required]],
     status: [null, [Validators.required]],
     deadline: [],
-    users: [],
+    teams: [],
   });
 
   constructor(
@@ -56,7 +56,7 @@ export class ReleaseUpdateComponent implements OnInit {
       type: release.type,
       status: release.status,
       deadline: release.deadline ? release.deadline.format(DATE_TIME_FORMAT) : null,
-      users: release.users,
+      teams: release.teams,
     });
   }
 
@@ -74,31 +74,8 @@ export class ReleaseUpdateComponent implements OnInit {
     }
   }
 
-  private createFromForm(): IRelease {
-    return {
-      ...new Release(),
-      id: this.editForm.get(['id'])!.value,
-      title: this.editForm.get(['title'])!.value,
-      type: this.editForm.get(['type'])!.value,
-      status: this.editForm.get(['status'])!.value,
-      deadline: this.editForm.get(['deadline'])!.value ? moment(this.editForm.get(['deadline'])!.value, DATE_TIME_FORMAT) : undefined,
-      users: this.editForm.get(['users'])!.value,
-    };
-  }
-
   trackById(index: number, item: IUser): any {
     return item.id;
-  }
-
-  getSelected(selectedVals: IUser[], option: IUser): IUser {
-    if (selectedVals) {
-      for (let i = 0; i < selectedVals.length; i++) {
-        if (option.id === selectedVals[i].id) {
-          return selectedVals[i];
-        }
-      }
-    }
-    return option;
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IRelease>>): void {
@@ -115,5 +92,28 @@ export class ReleaseUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  getSelected(selectedVals: IUser[], option: IUser): IUser {
+    if (selectedVals) {
+      for (let i = 0; i < selectedVals.length; i++) {
+        if (option.id === selectedVals[i].id) {
+          return selectedVals[i];
+        }
+      }
+    }
+    return option;
+  }
+
+  private createFromForm(): IRelease {
+    return {
+      ...new Release(),
+      id: this.editForm.get(['id'])!.value,
+      title: this.editForm.get(['title'])!.value,
+      type: this.editForm.get(['type'])!.value,
+      status: this.editForm.get(['status'])!.value,
+      deadline: this.editForm.get(['deadline'])!.value ? moment(this.editForm.get(['deadline'])!.value, DATE_TIME_FORMAT) : undefined,
+      teams: this.editForm.get(['teams'])!.value,
+    };
   }
 }

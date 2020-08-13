@@ -28,7 +28,7 @@ public class ReleaseDTO implements Serializable {
 
     private Instant deadline;
 
-    private Set<UserDTO> users = new HashSet<>();
+    private Set<UserDTO> teams = new HashSet<>();
 
     public String getId() {
         return id;
@@ -70,12 +70,12 @@ public class ReleaseDTO implements Serializable {
         this.deadline = deadline;
     }
 
-    public Set<UserDTO> getUsers() {
-        return users;
+    public Set<UserDTO> getTeams() {
+        return teams;
     }
 
-    public void setUsers(Set<UserDTO> users) {
-        this.users = users;
+    public void setTeams(Set<UserDTO> users) {
+        this.teams = users;
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ReleaseDTO implements Serializable {
             ", type='" + getType() + "'" +
             ", status='" + getStatus() + "'" +
             ", deadline='" + getDeadline() + "'" +
-            ", users='" + getUsers() + "'" +
+            ", teams='" + getTeams() + "'" +
             "}";
     }
 }

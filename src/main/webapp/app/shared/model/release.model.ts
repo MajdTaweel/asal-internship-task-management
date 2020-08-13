@@ -10,7 +10,7 @@ export interface IRelease {
   status?: ReleaseStatus;
   deadline?: Moment;
   tasks?: ITask[];
-  users?: IUser[];
+  teams?: IUser[];
 }
 
 export class Release implements IRelease {
@@ -21,6 +21,6 @@ export class Release implements IRelease {
     public status?: ReleaseStatus,
     public deadline?: Moment,
     public tasks?: ITask[],
-    public users?: IUser[]
+    public teams?: IUser[]
   ) {}
 }

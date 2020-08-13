@@ -45,7 +45,7 @@ describe('Release e2e test', () => {
       releaseUpdatePage.setTypeInput('type'),
       releaseUpdatePage.statusSelectLastOption(),
       releaseUpdatePage.setDeadlineInput('01/01/2001' + protractor.Key.TAB + '02:30AM'),
-      // releaseUpdatePage.userSelectLastOption(),
+      // releaseUpdatePage.teamSelectLastOption(),
     ]);
 
     expect(await releaseUpdatePage.getTitleInput()).to.eq('title', 'Expected Title value to be equals to title');

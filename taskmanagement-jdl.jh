@@ -36,12 +36,15 @@ entity Release {
 }
 
 relationship OneToMany {
+    // This is not supported using JDL
+    // It is done manually instead
+    // User{ownedRelease} to Release{createdBy}
 	Release to Task
 }
 
 relationship ManyToMany {
-	Release to User,
-	Task{assignee} to User
+    Release{team} to User{release},
+	Task{assignee} to User{task}
 }
 
 dto * with mapstruct

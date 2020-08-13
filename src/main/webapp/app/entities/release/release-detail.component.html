@@ -25,10 +25,10 @@
                 <dd>
                     <span>{{ release.deadline }}</span>
                 </dd>
-                <dt><span jhiTranslate="taskmanagementApp.release.user">User</span></dt>
+                <dt><span jhiTranslate="taskmanagementApp.release.team">Team</span></dt>
                 <dd>
-                    <span *ngFor="let user of release.users; let last = last">
-                        {{ user.id }}{{ last ? '' : ', ' }}
+                    <span *ngFor="let team of release.teams; let last = last">
+                        {{ team.id }}{{ last ? '' : ', ' }}
                     </span>
                 </dd>
             </dl>

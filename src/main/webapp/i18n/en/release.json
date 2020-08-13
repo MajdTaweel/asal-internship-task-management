@@ -21,7 +21,7 @@
       "status": "Status",
       "deadline": "Deadline",
       "task": "Task",
-      "user": "User"
+      "team": "Team"
     }
   }
 }
