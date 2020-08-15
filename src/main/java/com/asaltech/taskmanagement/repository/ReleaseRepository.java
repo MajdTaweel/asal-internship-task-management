@@ -1,6 +1,7 @@
 package com.asaltech.taskmanagement.repository;
 
 import com.asaltech.taskmanagement.domain.Release;
+import com.asaltech.taskmanagement.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -24,4 +25,6 @@ public interface ReleaseRepository extends MongoRepository<Release, String> {
 
     @Query("{'id': ?0}")
     Optional<Release> findOneWithEagerRelationships(String id);
+
+    List<Release> findAllByTeamContains(User user);
 }

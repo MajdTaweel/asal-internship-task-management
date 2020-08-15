@@ -1,10 +1,14 @@
 package com.asaltech.taskmanagement.service.impl;
 
 import com.asaltech.taskmanagement.domain.Release;
+import com.asaltech.taskmanagement.domain.User;
 import com.asaltech.taskmanagement.repository.ReleaseRepository;
 import com.asaltech.taskmanagement.service.ReleaseService;
+import com.asaltech.taskmanagement.service.UserService;
 import com.asaltech.taskmanagement.service.dto.ReleaseDTO;
+import com.asaltech.taskmanagement.service.dto.UserDTO;
 import com.asaltech.taskmanagement.service.mapper.ReleaseMapper;
+import com.asaltech.taskmanagement.service.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -28,15 +32,28 @@ public class ReleaseServiceImpl implements ReleaseService {
 
     private final ReleaseMapper releaseMapper;
 
-    public ReleaseServiceImpl(ReleaseRepository releaseRepository, ReleaseMapper releaseMapper) {
+    private final UserService userService;
+
+    private final UserMapper userMapper;
+
+    public ReleaseServiceImpl(ReleaseRepository releaseRepository, ReleaseMapper releaseMapper, UserService userService, UserMapper userMapper) {
         this.releaseRepository = releaseRepository;
         this.releaseMapper = releaseMapper;
+        this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @Override
     public ReleaseDTO save(ReleaseDTO releaseDTO) {
         log.debug("Request to save Release : {}", releaseDTO);
         Release release = releaseMapper.toEntity(releaseDTO);
+        log.debug("Checking if a user is present : {}", userService.getUserWithAuthorities().isPresent());
+        Optional<User> user = userService.getUserWithAuthorities();
+        if (user.isPresent()) {
+            log.debug("Adding current user to release property \"Team\". User : {}", user.get());
+            release.addTeamMember(user.get());
+            release = releaseRepository.save(release);
+        }
         release = releaseRepository.save(release);
         return releaseMapper.toDto(release);
     }
@@ -65,5 +82,10 @@ public class ReleaseServiceImpl implements ReleaseService {
     public void delete(String id) {
         log.debug("Request to delete Release : {}", id);
         releaseRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ReleaseDTO> findAllByTeamContains(UserDTO userDTO) {
+        return releaseMapper.toDto(releaseRepository.findAllByTeamContains(userMapper.userDTOToUser(userDTO)));
     }
 }

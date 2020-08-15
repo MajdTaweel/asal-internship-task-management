@@ -1,6 +1,7 @@
 package com.asaltech.taskmanagement.service;
 
 import com.asaltech.taskmanagement.service.dto.ReleaseDTO;
+import com.asaltech.taskmanagement.service.dto.UserDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -49,4 +50,6 @@ public interface ReleaseService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    List<ReleaseDTO> findAllByTeamContains(UserDTO userDTO);
 }
