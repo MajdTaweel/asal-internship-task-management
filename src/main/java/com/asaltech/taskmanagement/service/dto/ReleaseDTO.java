@@ -28,7 +28,15 @@ public class ReleaseDTO implements Serializable {
 
     private Instant deadline;
 
-    private Set<UserDTO> teams = new HashSet<>();
+    private String createdBy;
+
+    private Instant createdDate;
+
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
+
+    private Set<UserDTO> team = new HashSet<>();
 
     public String getId() {
         return id;
@@ -70,12 +78,44 @@ public class ReleaseDTO implements Serializable {
         this.deadline = deadline;
     }
 
-    public Set<UserDTO> getTeams() {
-        return teams;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setTeams(Set<UserDTO> users) {
-        this.teams = users;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Set<UserDTO> getTeam() {
+        return team;
+    }
+
+    public void setTeam(Set<UserDTO> users) {
+        this.team = users;
     }
 
     @Override
@@ -104,7 +144,7 @@ public class ReleaseDTO implements Serializable {
             ", type='" + getType() + "'" +
             ", status='" + getStatus() + "'" +
             ", deadline='" + getDeadline() + "'" +
-            ", teams='" + getTeams() + "'" +
+            ", teams='" + getTeam() + "'" +
             "}";
     }
 }

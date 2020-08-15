@@ -17,7 +17,7 @@ import java.util.Set;
  * A Release.
  */
 @Document(collection = "release")
-public class Release implements Serializable {
+public class Release extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,8 +45,8 @@ public class Release implements Serializable {
     private Set<Task> tasks = new HashSet<>();
 
     @DBRef
-    @Field("teams")
-    private Set<User> teams = new HashSet<>();
+    @Field("team")
+    private Set<User> team = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public String getId() {
@@ -134,26 +134,26 @@ public class Release implements Serializable {
         this.tasks = tasks;
     }
 
-    public Set<User> getTeams() {
-        return teams;
+    public Set<User> getTeam() {
+        return team;
     }
 
-    public void setTeams(Set<User> users) {
-        this.teams = users;
+    public void setTeam(Set<User> users) {
+        this.team = users;
     }
 
-    public Release teams(Set<User> users) {
-        this.teams = users;
+    public Release team(Set<User> users) {
+        this.team = users;
         return this;
     }
 
-    public Release addTeam(User user) {
-        this.teams.add(user);
+    public Release addTeamMember(User user) {
+        this.team.add(user);
         return this;
     }
 
-    public Release removeTeam(User user) {
-        this.teams.remove(user);
+    public Release removeTeamMember(User user) {
+        this.team.remove(user);
         return this;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

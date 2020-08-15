@@ -15,7 +15,7 @@ public interface ReleaseMapper extends EntityMapper<ReleaseDTO, Release> {
 
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "removeTask", ignore = true)
-    @Mapping(target = "removeTeam", ignore = true)
+    @Mapping(target = "removeTeamMember", ignore = true)
     Release toEntity(ReleaseDTO releaseDTO);
 
     default Release fromId(String id) {
