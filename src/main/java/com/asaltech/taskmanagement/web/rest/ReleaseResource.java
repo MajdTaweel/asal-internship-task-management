@@ -1,12 +1,8 @@
 package com.asaltech.taskmanagement.web.rest;
 
-import com.asaltech.taskmanagement.domain.Authority;
-import com.asaltech.taskmanagement.domain.User;
 import com.asaltech.taskmanagement.security.AuthoritiesConstants;
 import com.asaltech.taskmanagement.service.ReleaseService;
-import com.asaltech.taskmanagement.service.UserService;
 import com.asaltech.taskmanagement.service.dto.ReleaseDTO;
-import com.asaltech.taskmanagement.service.mapper.UserMapper;
 import com.asaltech.taskmanagement.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -16,14 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,14 +36,8 @@ public class ReleaseResource {
 
     private final ReleaseService releaseService;
 
-    private final UserService userService;
-
-    private final UserMapper userMapper;
-
-    public ReleaseResource(ReleaseService releaseService, UserService userService, UserMapper userMapper) {
+    public ReleaseResource(ReleaseService releaseService) {
         this.releaseService = releaseService;
-        this.userService = userService;
-        this.userMapper = userMapper;
     }
 
     /**
@@ -83,16 +70,20 @@ public class ReleaseResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/releases")
-    @PreAuthorize("#releaseDTO.createdBy = principal.username")
-    public ResponseEntity<ReleaseDTO> updateRelease(@Valid @RequestBody ReleaseDTO releaseDTO) throws URISyntaxException {
+    public ResponseEntity<?> updateRelease(@Valid @RequestBody ReleaseDTO releaseDTO) throws URISyntaxException {
         log.debug("REST request to update Release : {}", releaseDTO);
         if (releaseDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        ReleaseDTO result = releaseService.save(releaseDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, releaseDTO.getId()))
-            .body(result);
+        return releaseService.findOne(releaseDTO.getId()).map(persistentReleaseDTO -> {
+            if (releaseService.isReleaseOwnerOrAdmin(persistentReleaseDTO)) {
+                ReleaseDTO result = releaseService.save(releaseDTO);
+                return ResponseEntity.ok()
+                    .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, releaseDTO.getId()))
+                    .body(result);
+            }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
@@ -105,17 +96,7 @@ public class ReleaseResource {
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public List<ReleaseDTO> getAllReleases(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all Releases");
-        Optional<User> user = userService.getUserWithAuthorities();
-        if (user.isPresent()) {
-            Authority adminAuthority = new Authority();
-            adminAuthority.setName(AuthoritiesConstants.ADMIN);
-            if (user.get().getAuthorities().contains(adminAuthority)) {
-                return releaseService.findAll();
-            } else {
-                return releaseService.findAllByTeamContains(userMapper.userToUserDTO(user.get()));
-            }
-        }
-        return new ArrayList<>();
+        return releaseService.findAuthorized();
     }
 
     /**
@@ -138,18 +119,14 @@ public class ReleaseResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/releases/{id}")
-    public ResponseEntity<Void> deleteRelease(@PathVariable String id) {
+    public ResponseEntity<Object> deleteRelease(@PathVariable String id) {
         log.debug("REST request to delete Release : {}", id);
-        Optional<ReleaseDTO> release = releaseService.findOne(id);
-        if (release.isPresent()) {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (!release.get().getCreatedBy().equalsIgnoreCase(userDetails.getUsername())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return releaseService.findOne(id).map(releaseDTO -> {
+            if (releaseService.isReleaseOwnerOrAdmin(releaseDTO)) {
+                releaseService.delete(id);
+                return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
             }
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-        releaseService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

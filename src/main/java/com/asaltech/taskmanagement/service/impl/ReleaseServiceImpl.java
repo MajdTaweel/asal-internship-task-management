@@ -3,6 +3,7 @@ package com.asaltech.taskmanagement.service.impl;
 import com.asaltech.taskmanagement.domain.Release;
 import com.asaltech.taskmanagement.domain.User;
 import com.asaltech.taskmanagement.repository.ReleaseRepository;
+import com.asaltech.taskmanagement.security.AuthoritiesConstants;
 import com.asaltech.taskmanagement.service.ReleaseService;
 import com.asaltech.taskmanagement.service.UserService;
 import com.asaltech.taskmanagement.service.dto.ReleaseDTO;
@@ -13,8 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -49,10 +54,9 @@ public class ReleaseServiceImpl implements ReleaseService {
         Release release = releaseMapper.toEntity(releaseDTO);
         log.debug("Checking if a user is present : {}", userService.getUserWithAuthorities().isPresent());
         Optional<User> user = userService.getUserWithAuthorities();
-        if (user.isPresent()) {
+        if (user.isPresent() && !release.getTeam().contains(user.get())) {
             log.debug("Adding current user to release property \"Team\". User : {}", user.get());
             release.addTeamMember(user.get());
-            release = releaseRepository.save(release);
         }
         release = releaseRepository.save(release);
         return releaseMapper.toDto(release);
@@ -87,5 +91,26 @@ public class ReleaseServiceImpl implements ReleaseService {
     @Override
     public List<ReleaseDTO> findAllByTeamContains(UserDTO userDTO) {
         return releaseMapper.toDto(releaseRepository.findAllByTeamContains(userMapper.userDTOToUser(userDTO)));
+    }
+
+    @Override
+    public List<ReleaseDTO> findAuthorized() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN);
+        if (userDetails.getAuthorities().contains(adminAuthority)) {
+            return findAll();
+        } else {
+            return userService.getUserWithAuthorities()
+                .map(user -> findAllByTeamContains(userMapper.userToUserDTO(user)))
+                .orElse(new ArrayList<>());
+        }
+    }
+
+    @Override
+    public boolean isReleaseOwnerOrAdmin(ReleaseDTO release) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN);
+        return userDetails.getAuthorities().contains(adminAuthority)
+            || release.getCreatedBy().equalsIgnoreCase(userDetails.getUsername());
     }
 }

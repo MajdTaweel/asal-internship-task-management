@@ -52,4 +52,8 @@ public interface ReleaseService {
     void delete(String id);
 
     List<ReleaseDTO> findAllByTeamContains(UserDTO userDTO);
+
+    List<ReleaseDTO> findAuthorized();
+
+    boolean isReleaseOwnerOrAdmin(ReleaseDTO release);
 }
