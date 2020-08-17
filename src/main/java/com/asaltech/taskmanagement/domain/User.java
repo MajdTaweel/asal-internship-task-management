@@ -1,7 +1,6 @@
 package com.asaltech.taskmanagement.domain;
 
 import com.asaltech.taskmanagement.config.Constants;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.Id;
@@ -53,7 +52,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Indexed
     private String email;
 
-    private boolean activated = false;
+    private boolean activated = true;
 
     @Size(min = 2, max = 10)
     @Field("lang_key")
