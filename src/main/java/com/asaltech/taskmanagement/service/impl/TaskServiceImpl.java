@@ -1,6 +1,8 @@
 package com.asaltech.taskmanagement.service.impl;
 
+import com.asaltech.taskmanagement.domain.Release;
 import com.asaltech.taskmanagement.domain.Task;
+import com.asaltech.taskmanagement.repository.ReleaseRepository;
 import com.asaltech.taskmanagement.repository.TaskRepository;
 import com.asaltech.taskmanagement.service.ReleaseService;
 import com.asaltech.taskmanagement.service.TaskService;
@@ -35,11 +37,14 @@ public class TaskServiceImpl implements TaskService {
 
     private final ReleaseMapper releaseMapper;
 
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, ReleaseService releaseService, ReleaseMapper releaseMapper) {
+    private final ReleaseRepository releaseRepository;
+
+    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper, ReleaseService releaseService, ReleaseMapper releaseMapper, ReleaseRepository releaseRepository) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
         this.releaseService = releaseService;
         this.releaseMapper = releaseMapper;
+        this.releaseRepository = releaseRepository;
     }
 
     @Override
@@ -47,6 +52,11 @@ public class TaskServiceImpl implements TaskService {
         log.debug("Request to save Task : {}", taskDTO);
         Task task = taskMapper.toEntity(taskDTO);
         task = taskRepository.save(task);
+        Optional<Release> release = releaseRepository.findById(taskDTO.getReleaseId());
+        if (release.isPresent()) {
+            release.get().addTask(task);
+            releaseRepository.save(release.get());
+        }
         return taskMapper.toDto(task);
     }
 
