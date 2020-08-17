@@ -1,5 +1,6 @@
 package com.asaltech.taskmanagement.repository;
 
+import com.asaltech.taskmanagement.domain.Release;
 import com.asaltech.taskmanagement.domain.Task;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +25,6 @@ public interface TaskRepository extends MongoRepository<Task, String> {
 
     @Query("{'id': ?0}")
     Optional<Task> findOneWithEagerRelationships(String id);
+
+    List<Task> findAllByReleaseEquals(Release release);
 }

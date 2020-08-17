@@ -49,4 +49,6 @@ public interface TaskService {
      * @param id the id of the entity.
      */
     void delete(String id);
+
+    List<TaskDTO> findAllByReleaseEquals(String releaseId);
 }
