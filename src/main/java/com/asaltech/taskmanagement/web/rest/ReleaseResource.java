@@ -25,6 +25,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.USER + "\")")
 public class ReleaseResource {
 
     private final Logger log = LoggerFactory.getLogger(ReleaseResource.class);
