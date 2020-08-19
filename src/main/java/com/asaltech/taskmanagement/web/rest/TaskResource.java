@@ -152,7 +152,7 @@ public class TaskResource {
                 throw new BadRequestAlertException("A task should contain a release ID for an existing release", ENTITY_NAME, "releasenotfound");
             });
         if (!taskService.isReleaseTeamMemberOrAdmin(releaseDTO)) {
-            throw new BadRequestAlertException("You should be a member of the release's team to access/edit a task in this release", ENTITY_NAME, "notreleaseteammember");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You should be a member of the release's team to access/edit a task in this release");
         }
     }
 }
