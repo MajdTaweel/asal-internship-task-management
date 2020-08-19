@@ -1,27 +1,33 @@
 package com.asaltech.taskmanagement.web.rest;
 
+import com.asaltech.taskmanagement.security.AuthoritiesConstants;
+import com.asaltech.taskmanagement.service.ReleaseService;
 import com.asaltech.taskmanagement.service.TaskService;
+import com.asaltech.taskmanagement.service.dto.ReleaseDTO;
 import com.asaltech.taskmanagement.service.dto.TaskDTO;
 import com.asaltech.taskmanagement.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing {@link com.asaltech.taskmanagement.domain.Task}.
  */
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.USER + "\")")
 public class TaskResource {
 
     private final Logger log = LoggerFactory.getLogger(TaskResource.class);
@@ -33,8 +39,11 @@ public class TaskResource {
 
     private final TaskService taskService;
 
-    public TaskResource(TaskService taskService) {
+    private final ReleaseService releaseService;
+
+    public TaskResource(TaskService taskService, ReleaseService releaseService) {
         this.taskService = taskService;
+        this.releaseService = releaseService;
     }
 
     /**
@@ -50,6 +59,7 @@ public class TaskResource {
         if (taskDTO.getId() != null) {
             throw new BadRequestAlertException("A new task cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        checkReleaseTeamMembership(taskDTO.getReleaseId());
         TaskDTO result = taskService.save(taskDTO);
         return ResponseEntity.created(new URI("/api/tasks/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
@@ -71,6 +81,7 @@ public class TaskResource {
         if (taskDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        checkReleaseTeamMembership(taskDTO.getReleaseId());
         TaskDTO result = taskService.save(taskDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, taskDTO.getId()))
@@ -84,9 +95,17 @@ public class TaskResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tasks in body.
      */
     @GetMapping("/tasks")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public List<TaskDTO> getAllTasks(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all Tasks");
         return taskService.findAll();
+    }
+
+    @GetMapping("/release/{releaseId}/tasks")
+    public List<TaskDTO> getAllReleaseTasks(@PathVariable String releaseId) {
+        log.debug("REST request to get all Release Tasks");
+        checkReleaseTeamMembership(releaseId);
+        return taskService.findAllByReleaseEquals(releaseId);
     }
 
     /**
@@ -98,8 +117,12 @@ public class TaskResource {
     @GetMapping("/tasks/{id}")
     public ResponseEntity<TaskDTO> getTask(@PathVariable String id) {
         log.debug("REST request to get Task : {}", id);
-        Optional<TaskDTO> taskDTO = taskService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(taskDTO);
+        return taskService.findOne(id)
+            .map(taskDTO -> {
+                checkReleaseTeamMembership(taskDTO.getReleaseId());
+                return ResponseEntity.ok().headers((HttpHeaders) null).body(taskDTO);
+            })
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -109,9 +132,27 @@ public class TaskResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/tasks/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable String id) {
+    public ResponseEntity<Object> deleteTask(@PathVariable String id) {
         log.debug("REST request to delete Task : {}", id);
-        taskService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+        return taskService.findOne(id)
+            .map(taskDTO -> {
+                checkReleaseTeamMembership(taskDTO.getReleaseId());
+                taskService.delete(id);
+                return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build();
+            })
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    private void checkReleaseTeamMembership(String releaseId) {
+        if (releaseId == null) {
+            throw new BadRequestAlertException("A new task should have a release ID", ENTITY_NAME, "releaseidnull");
+        }
+        ReleaseDTO releaseDTO = releaseService.findOne(releaseId)
+            .orElseThrow(() -> {
+                throw new BadRequestAlertException("A task should contain a release ID for an existing release", ENTITY_NAME, "releasenotfound");
+            });
+        if (taskService.isReleaseTeamMemberOrAdmin(releaseDTO)) {
+            throw new BadRequestAlertException("You should be a member of the release's team to access/edit a task in this release", ENTITY_NAME, "notreleaseteammember");
+        }
     }
 }

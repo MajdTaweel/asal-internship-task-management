@@ -1,5 +1,6 @@
 package com.asaltech.taskmanagement.service;
 
+import com.asaltech.taskmanagement.service.dto.ReleaseDTO;
 import com.asaltech.taskmanagement.service.dto.TaskDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,4 +52,6 @@ public interface TaskService {
     void delete(String id);
 
     List<TaskDTO> findAllByReleaseEquals(String releaseId);
+
+    boolean isReleaseTeamMemberOrAdmin(ReleaseDTO releaseDTO);
 }

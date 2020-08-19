@@ -4,8 +4,10 @@ import com.asaltech.taskmanagement.domain.Release;
 import com.asaltech.taskmanagement.domain.Task;
 import com.asaltech.taskmanagement.repository.ReleaseRepository;
 import com.asaltech.taskmanagement.repository.TaskRepository;
+import com.asaltech.taskmanagement.security.AuthoritiesConstants;
 import com.asaltech.taskmanagement.service.ReleaseService;
 import com.asaltech.taskmanagement.service.TaskService;
+import com.asaltech.taskmanagement.service.dto.ReleaseDTO;
 import com.asaltech.taskmanagement.service.dto.TaskDTO;
 import com.asaltech.taskmanagement.service.mapper.ReleaseMapper;
 import com.asaltech.taskmanagement.service.mapper.TaskMapper;
@@ -13,6 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -94,5 +99,16 @@ public class TaskServiceImpl implements TaskService {
                 .map(taskMapper::toDto)
                 .collect(Collectors.toList()))
             .orElse(new ArrayList<>());
+    }
+
+    public boolean isReleaseTeamMemberOrAdmin(ReleaseDTO releaseDTO) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN);
+        if (userDetails.getAuthorities().contains(adminAuthority)) {
+            return true;
+        }
+        return releaseDTO.getTeam()
+            .stream()
+            .anyMatch(userDTO -> userDTO.getLogin().equalsIgnoreCase(userDetails.getUsername()));
     }
 }
