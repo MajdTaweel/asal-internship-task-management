@@ -27,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
-@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.USER + "\")")
+@PreAuthorize("isAuthenticated()")
 public class TaskResource {
 
     private final Logger log = LoggerFactory.getLogger(TaskResource.class);

@@ -25,7 +25,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.USER + "\")")
+@PreAuthorize("isAuthenticated()")
 public class ReleaseResource {
 
     private final Logger log = LoggerFactory.getLogger(ReleaseResource.class);
