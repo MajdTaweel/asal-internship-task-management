@@ -70,6 +70,7 @@ public class ReleaseResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/releases")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.LEAD + "\")")
     public ResponseEntity<?> updateRelease(@Valid @RequestBody ReleaseDTO releaseDTO) throws URISyntaxException {
         log.debug("REST request to update Release : {}", releaseDTO);
         if (releaseDTO.getId() == null) {
@@ -119,6 +120,7 @@ public class ReleaseResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/releases/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.LEAD + "\")")
     public ResponseEntity<Object> deleteRelease(@PathVariable String id) {
         log.debug("REST request to delete Release : {}", id);
         return releaseService.findOne(id).map(releaseDTO -> {
